@@ -1,8 +1,9 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
+import { AllCartItemsTotalPrice } from '../../feature/cart/CartSlice';
 
 const OrderSummeryTable = () => {
-    const totalPrice = useSelector(state=> state.totalPrice);
+    const totalPrice = useSelector(AllCartItemsTotalPrice);
 
     return (
         <>
