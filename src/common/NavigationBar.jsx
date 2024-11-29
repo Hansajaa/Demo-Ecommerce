@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import user_icon from "../assets/navigation_bar_asserts/user_img.png";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import {AllCartItemCount} from '../feature/cart/cartSlice'
 
 function NavigationBar(dropdownState) {
   const [isUserMenuOpen, setUserMenu] = useState(false);
   const [isMainMenuOpen, setMainMenu] = useState(false);
   const [isCategoryMenuOpen, setCategoryMenuOpen] = useState(false);
-  const cartItemCount = useSelector((state) => state.cartItemCount);
+  const cartItemCount = useSelector(AllCartItemCount);
 
   function handleMainMenu() {
     setMainMenu(!isMainMenuOpen);

@@ -3,14 +3,18 @@ import { Table } from "flowbite-react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { Button } from 'flowbite-react'
 import { useSelector, useDispatch } from 'react-redux'
-import { itemQtyHandler, deleteItem } from '../feature/cart/cartSlice'
+import { itemQtyHandler, deleteItem, AllCartItems, AllCartItemCount, AllCartItemsTotalPrice } from '../feature/cart/cartSlice'
 import { CART_ITEM_QTY_DECREMENT, CART_ITEM_QTY_INCREMENT } from '../types/cartQtyType';
 import CartPageAnimation from '../atoms/animations/CartPageAnimation';
 import { useNavigate } from 'react-router-dom';
 
 const CartTable = () => {
-    const cartItems = useSelector((state) => state.cartItems);
-    const cartItemCount = useSelector((state) => state.cartItemCount);
+
+    // total price of products in cart
+    const totalPrice = useSelector(AllCartItemsTotalPrice);
+
+    const cartItems = useSelector(AllCartItems);
+    const cartItemCount = useSelector(AllCartItemCount);
     const navidate = useNavigate()
     const dispatch = useDispatch();
 
