@@ -21,6 +21,7 @@ const cartSlice = createSlice({
                         if(cartItem.productID === newItem.productID){
                             cartItem.cartQty ++;
                         }
+                        return cartItem;
                     })
                     item.cartQty ++;
                     item.cartPrice =  item.cartQty * item.price;
