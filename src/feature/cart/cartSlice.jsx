@@ -57,9 +57,11 @@ const cartSlice = createSlice({
                         state.totalPrice+=item.price;
                     }
                     if(action.payload.type === CART_ITEM_QTY_DECREMENT){
-                        item.cartQty --;
-                        item.cartPrice = item.cartQty * item.price;
-                        state.totalPrice-=item.price;
+                        if(!(item.cartQty === 1)){
+                            item.cartQty --;
+                            item.cartPrice = item.cartQty * item.price;
+                            state.totalPrice-=item.price;
+                        }
                     }
                 }
                 return item;
