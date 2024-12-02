@@ -1,25 +1,34 @@
 import registerImage from "../assets/login_page_asserts/login_page_side_image.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import { useFormik } from "formik";
 
 import {basicSchema} from '../schemas/register/RegisterSchemas'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { registerNewUser } from "../feature/users/UserSlice";
+import { useDispatch } from "react-redux";
+
 
 function RegisterPage(props) {
+
+    const dispatch = useDispatch();
+
+    let navigate = useNavigate();
+
+    
 
     const notifySuccess = (name) => {
         toast.success(`Successfully registered ${name}!`, {
             autoClose:3000
         });
+
+        // navigate("/login");
     }
     
     const onSubmit = (values, actions) => {
+        dispatch(registerNewUser(values));
         actions.resetForm();
         notifySuccess(values.name);
-        // navigate("/login");
     }
 
     const {values, handleChange, errors, handleSubmit} = useFormik({
@@ -32,14 +41,9 @@ function RegisterPage(props) {
         onSubmit
     })
 
-    //----------------------------------------------
+    
 
-    let navigate = useNavigate();
-
-    // const onSubmit = () => {
-    //     // saveUser(data);
-    //     navigate("/login");
-    // }
+    //-----------------------------------------------------------------------------
 
     // function saveUser(user){
     //     axios.post('http://localhost:8080/api/v1/user/add', user)
@@ -64,21 +68,6 @@ function RegisterPage(props) {
     //     });
     //     navigate("/login");
     // }
-
-    // const [username, setUsername] = useState();
-    // const [isExistsUsername, setIsExistsUsername] = useState(false);
-
-    // check user name is exists
-    // useEffect(()=>{
-    //     axios.post(`http://localhost:8080/api/v1/user/check-username/${username}`)
-    //     .then(function(response){
-    //         console.log(response.data);
-    //         setIsExistsUsername(response.data);
-    //     })
-    //     .catch(function(error){
-    //         console.log(error);
-    //     })
-    // },[username])
 
     return (
         <div>
@@ -112,6 +101,8 @@ function RegisterPage(props) {
                                 </svg>
                             </div>
                             {errors.password && <span className="-mt-3 text-xs text-[red]">{errors.password}</span>}
+                            
+                            {/* Register button */}
                             <button className="bg-[#17396d] py-2 rounded-xl text-white hover:scale-105 duration-300" onClick={handleSubmit}>Sign Up</button>
                         </form>
 
