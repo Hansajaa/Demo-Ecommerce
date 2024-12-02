@@ -43,14 +43,13 @@ function CardCarousel({products}) {
     };
 
     return (
-    
 
         <div className='w-full p-9'>
             <div className='mt-20'>
                 <Slider {...settings}>
                     {Array.isArray(products) && products.map((p) => (
                         <div key={p.id}>
-                            <ItemCard product={p} imageUrl={p.imageUrl} name={p.name} price={p.price} quantity={p.quantity} description={p.description}></ItemCard>
+                            <ItemCard product={p} imageUrl={p.image_url} name={p.name} price={p.price} quantity={p.quantity} description={p.description}></ItemCard>
                         </div>
                     ))}
                 </Slider>
@@ -58,50 +57,5 @@ function CardCarousel({products}) {
         </div>
     );
 }
-
-const data = [
-    {
-        name:`Long Frock`,
-        img:"/Items/item_img.jpg",
-        price:`Rs.2500`,
-        stock:10
-    },
-    {
-        name:`Long Frock`,
-        img:`/Items/item_img.jpg`,
-        price:`Rs.2500`,
-        stock:10
-    },
-    {
-        name:`Long Frock`,
-        img:`/Items/item_img.jpg`,
-        price:`Rs.2500`,
-        stock:10
-    },
-    {
-        name:`Long Frock`,
-        img:`/Items/item_img.jpg`,
-        price:`Rs.2500`,
-        stock:10
-    },
-    {
-        name:`Long Frock`,
-        img:`/Items/item_img.jpg`,
-        price:`Rs.2500`,
-        stock:10
-    },
-    {
-        name:`Long Frock`,
-        img:`/Items/item_img.jpg`,
-        price:`Rs.2500`,
-        stock:10
-    },
-    {
-        name:`Long Frock`,
-        img:`/Items/item_img.jpg`,
-        price:`Rs.2500`,
-        stock:10
-    }
-]
 
 export default CardCarousel;
