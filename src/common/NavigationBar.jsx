@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import user_icon from "../assets/navigation_bar_asserts/user_img.png";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import {AllCartItemCount} from '../feature/cart/CartSlice'
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setCartInitialValues } from '../feature/cart/CartSlice'
+import { selectCurrentLogUser, setCurrentLoginUser } from "../feature/users/UserSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function NavigationBar(dropdownState) {
   const [isUserMenuOpen, setUserMenu] = useState(false);
   const [isMainMenuOpen, setMainMenu] = useState(false);
   const [isCategoryMenuOpen, setCategoryMenuOpen] = useState(false);
-  const cartItemCount = useSelector(AllCartItemCount);
+
+  const currentLogUser = useSelector(selectCurrentLogUser);
+  const dispatch =useDispatch();
+  const navigate = useNavigate();
 
 
   function handleMainMenu() {
@@ -18,15 +24,33 @@ function NavigationBar(dropdownState) {
   }
 
   function handleUserMenu() {
-    setUserMenu(!isUserMenuOpen);
-    setMainMenu(false);
-    setCategoryMenuOpen(false);
+    if(currentLogUser){
+      setUserMenu(!isUserMenuOpen);
+      setMainMenu(false);
+      setCategoryMenuOpen(false);
+    }else{
+      navigate('/login');
+    }
   }
 
   function handleCategoryMenu() {
     setCategoryMenuOpen(!isCategoryMenuOpen);
     setMainMenu(false);
     setUserMenu(false);
+  }
+
+  const notifySuccessLogout = () => {
+    toast.success("Successfully Logout!", {
+        autoClose:3000,
+        position: "top-center"
+    });
+}
+
+  function handleLogout(){
+     dispatch(setCurrentLoginUser(""));
+     dispatch(setCartInitialValues());
+     setUserMenu(false);
+     notifySuccessLogout();
   }
 
   useEffect(() => {
@@ -66,9 +90,10 @@ function NavigationBar(dropdownState) {
                 src="https://img.icons8.com/color/48/shopping-cart--v1.png"
                 alt="shopping-cart--v1"
               />
-              <span className="bg-blue-50 rounded-full h-5 w-5 text-center">{cartItemCount}</span>
+              <span className="bg-blue-50 rounded-full h-5 w-5 text-center">{currentLogUser ? currentLogUser.cartItems.length : 0}</span>
             </Link>
 
+            {/* User Dropdown button */}
             <button
               type="button"
               className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-[#15616D] dark:focus:ring-gray-600"
@@ -79,59 +104,59 @@ function NavigationBar(dropdownState) {
               onClick={handleUserMenu}
             >
               <span className="sr-only">Open user menu</span>
-              {/* <img width="48" height="48" src="https://img.icons8.com/color/48/000000/user-male-circle--v1.png" alt="user-male-circle--v1"/> */}
               <img width="48" height="48" src={user_icon} alt="" />
             </button>
 
-            {/* Dropdown menu  */}
+            {/* User Dropdown menu  */}
             {isUserMenuOpen && (
-              <div
-                className="z-50 absolute top-16 right-4  my-4 text-base list-none bg-[#15616D] divide-y divide-gray-100 rounded-lg shadow dark:bg-[#15616D] dark:divide-gray-600"
-                id="user-dropdown"
-              >
-                <div className="px-4 py-3">
-                  <span className="block text-sm text-white dark:text-white">
-                    Bonnie Green
-                  </span>
-                  <span className="block text-sm  text-white truncate dark:text-gray-400">
-                    name@flowbite.com
-                  </span>
+
+                <div
+                  className="z-50 absolute top-16 right-4  my-4 text-base list-none bg-[#15616D] divide-y divide-gray-100 rounded-lg shadow dark:bg-[#15616D] dark:divide-gray-600"
+                  id="user-dropdown"
+                >
+                  <div className="px-4 py-3">
+                    <span className="block text-sm text-white dark:text-white">
+                      Hi, {currentLogUser.name}
+                    </span>
+                    <span className="block text-sm text-white dark:text-white mt-2">
+                      {currentLogUser.email}
+                    </span>
+                  </div>
+                  <ul className="py-2" aria-labelledby="user-menu-button">
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        Profile
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        Points
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        Settings
+                      </a>
+                    </li>
+                    <li>
+                      <Link
+                        onClick={handleLogout}
+                        className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        Sign out
+                      </Link>
+                    </li>
+                  </ul>
                 </div>
-                <ul className="py-2" aria-labelledby="user-menu-button">
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Dashboard
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Settings
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Earnings
-                    </a>
-                  </li>
-                  <li>
-                    <Link
-                      to={"/login"}
-                      className="block px-4 py-2 text-sm text-white hover:bg-[#0e4047] dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Sign out
-                    </Link>
-                  </li>
-                </ul>
-              </div>
             )}
 
             <button
@@ -236,7 +261,6 @@ function NavigationBar(dropdownState) {
               <ul className="flex flex-col font-medium p-4  mt-4 border border-[#15616D] rounded-lg bg-[#15616D]  rtl:space-x-reverse  dark:bg-gray-800  dark:border-gray-700">
                 <li>
                   <Link
-                    to={"/womenCategory"}
                     className="block py-2 px-3 text-white rounded hover:bg-[#0e4047]   dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white  dark:border-gray-700"
                     aria-current="page"
                   >
@@ -245,7 +269,6 @@ function NavigationBar(dropdownState) {
                 </li>
                 <li>
                   <Link
-                    to={"/menCategory"}
                     className="block py-2 px-3 text-white rounded hover:bg-[#0e4047] dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white  dark:border-gray-700"
                   >
                     Men
@@ -253,7 +276,6 @@ function NavigationBar(dropdownState) {
                 </li>
                 <li>
                   <Link
-                    to={"/babyCategory"}
                     className="block py-2 px-3 text-white rounded hover:bg-[#0e4047]  dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white  dark:border-gray-700"
                   >
                     Baby
@@ -261,7 +283,6 @@ function NavigationBar(dropdownState) {
                 </li>
                 <li>
                   <Link
-                    to={"/kidsCategory"}
                     className="block py-2 px-3 text-white rounded hover:bg-[#0e4047]  dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white  dark:border-gray-700"
                   >
                     Kids
@@ -272,6 +293,8 @@ function NavigationBar(dropdownState) {
           )}
         </div>
       </nav>
+
+      <ToastContainer />
     </div>
   );
 }
