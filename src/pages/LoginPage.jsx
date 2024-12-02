@@ -3,17 +3,54 @@ import loginImage from "../assets/login_page_asserts/login_page_side_image.jpg";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import { basicSchema } from "../schemas/login/LoginSchemas";
+import { useSelector, useDispatch } from "react-redux";
+import { allRegisteredUsers, setCurrentLoginUser } from "../feature/users/UserSlice";
 
-
-
+// User Login Page
 function LoginPage() {
   
   let navigate = useNavigate();
-  
-  const onSubmit = (values, actions) => {
-    navigate("/");
+  const registerdUsers = useSelector(allRegisteredUsers);
+  const dispatch = useDispatch();
+
+  // Alert for successfull login
+  function SuccessAlert(){
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "You are login successfully",
+      showConfirmButton: false,
+      timer: 1000
+    });
+  }
+
+  // Alert for unauthorized access
+  function unAuthorizedAlert(message){
+    Swal.fire({
+      title: "Can't login?",
+      text: `Check Your ${message} !`,
+      icon: "question"
+    });
   }
   
+  // submit handler function
+  const onSubmit = (values, actions) => {
+    Array.isArray(registerdUsers) && registerdUsers.length != 0 ? registerdUsers.map( user => {
+        if(user.email == values.email){
+            if(user.password == values.password){
+              dispatch(setCurrentLoginUser(user));
+              SuccessAlert();
+              navigate("/");
+            }else{
+              unAuthorizedAlert("Password");
+            }
+        }else{
+          unAuthorizedAlert("Email");
+        }
+    }) : unAuthorizedAlert("Email");
+
+  }
+
   const {values, handleChange, errors, handleSubmit} = useFormik({
     initialValues:{
        email:"",
@@ -23,37 +60,6 @@ function LoginPage() {
     onSubmit,
   })
 
-  //-----------------------------------------------------
-
-  // function authenticateUser(user){
-  //     axios.post("http://localhost:8080/api/v1/login/authenticate",user)
-  //     .then(function(response){
-  //         if(response.data){
-  //             navigate("/");
-  //         }else{
-  //             unAuthorizedAlert();
-  //         }
-  //     })
-  //     .catch(function(err){
-  //         console.log(err);
-  //     })
-  // }
-
-  // function unAuthorizedAlert(){
-  //   Swal.fire({
-  //     title: "Can't login?",
-  //     text: "Check Your Username and Password !",
-  //     icon: "question"
-  //   });
-  // }
-
-  // function SuccessAlert(){
-  //   Swal.fire({
-  //     title: "login success",
-  //     text: "you are login successfully",
-  //     icon: "success"
-  //   });
-  // }
 
   return (
     <div>
@@ -87,7 +93,9 @@ function LoginPage() {
                   </svg>
                 </div>
                 <span className="-mt-3 text-xs text-[red]">{errors.password}</span>
-                <button onClick={handleSubmit} className="bg-[#17396d] py-2 rounded-xl text-white hover:scale-105 duration-300 text-center">Login</button>
+                
+                {/* Login Button */}
+                <button className="bg-[#17396d] py-2 rounded-xl text-white hover:scale-105 duration-300 text-center" onClick={handleSubmit} type="submit">Login</button>
             </form>
 
             <div className="grid grid-cols-3 text-gray-400 mt-8 w-5/6 ml-7">
