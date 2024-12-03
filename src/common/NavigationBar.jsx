@@ -3,7 +3,7 @@ import user_icon from "../assets/navigation_bar_asserts/user_img.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentLogUser, setCurrentLoginUser } from "../feature/users/UserSlice";
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function NavigationBar(dropdownState) {
@@ -291,8 +291,6 @@ function NavigationBar(dropdownState) {
           )}
         </div>
       </nav>
-
-      <ToastContainer />
     </div>
   );
 }

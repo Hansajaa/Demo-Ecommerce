@@ -4,31 +4,36 @@ import ProductRatings from "../atoms/ProductRatings";
 import notFavourite from '../assets/Items/favourite1.png'
 import favourite from '../assets/Items/favourite2.png'
 import { useDispatch, useSelector } from 'react-redux'
-import CartItemAddedAlert from "../atoms/alerts/CartItemAddedAlert";
 import { selectCurrentLogUser, addItems } from "../feature/users/UserSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ItemCard({ product, imageUrl, name, price, quantity, description }) {
 
   const [isFavourite, setFavourite] = useState(false);
-  const [isAdded, setAdded] = useState(false);
   const currentLogUser = useSelector(selectCurrentLogUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const notifyCartAdded = (productName) => {
+    toast.success(`${productName} Successfully Added to cart !`, {
+      autoClose: 3000,
+      position: "top-right"
+    });
+  }
 
   const handleCart = () => {
-    if(currentLogUser === ""){
-        navigate('/login');
-    }else{
+    if (currentLogUser === "") {
+      navigate('/login');
+    } else {
       dispatch(addItems(product));
-      setAdded(true);
-      setTimeout(() => { setAdded(false) }, 1500);
+      notifyCartAdded(product.name);
     }
   }
 
   return (
-    <>
+    <div>
       <div>
         <div className="block rounded-lg p-3 shadow-sm shadow-indigo-100 mt-10 m-4 text-white">
           {/* product image */}
@@ -59,16 +64,14 @@ function ItemCard({ product, imageUrl, name, price, quantity, description }) {
               </button>
 
               {/* Add to cart button */}
-              <button className="w-8 disabled:cursor-not-allowed" onClick={handleCart} disabled={!(quantity>0)}>
+              <button className="w-8 disabled:cursor-not-allowed" onClick={handleCart} disabled={!(quantity > 0)}>
                 <img src={addCart} alt="add to cart" />
               </button>
             </div>
           </div>
         </div>
       </div>
-
-      {isAdded ? <CartItemAddedAlert product={product} /> : null}
-    </>
+    </div>
   );
 }
 

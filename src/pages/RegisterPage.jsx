@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
 import {basicSchema} from '../schemas/register/RegisterSchemas'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerNewUser } from "../feature/users/UserSlice";
 import { useDispatch } from "react-redux";
@@ -136,8 +136,6 @@ function RegisterPage(props) {
                     </div>
                 </div>
             </section>
-
-            <ToastContainer />
         </div>
     );
 }
