@@ -5,58 +5,59 @@ import { useFormik } from "formik";
 import { basicSchema } from "../schemas/login/LoginSchemas";
 import { useSelector, useDispatch } from "react-redux";
 import { allRegisteredUsers, setCurrentLoginUser } from "../feature/users/UserSlice";
+import { toast } from "react-toastify";
 
 // User Login Page
 function LoginPage() {
-  
+
   let navigate = useNavigate();
   const registerdUsers = useSelector(allRegisteredUsers);
   const dispatch = useDispatch();
 
   // Alert for successfull login
-  function SuccessAlert(){
-    Swal.fire({
-      position: "top-end",
-      icon: "success",
-      title: "You are login successfully",
-      showConfirmButton: false,
-      timer: 1000
-    });
+  function SuccessAlert() {
+    toast.success('Successfully Login !', {
+      autoClose: 3000,
+    })
   }
 
   // Alert for unauthorized access
-  function unAuthorizedAlert(message){
-    Swal.fire({
-      title: "Can't login?",
-      text: `Check Your ${message} !`,
-      icon: "question"
-    });
+  const unAuthorizedAlert = (message) => {
+    toast.warn(`Check Your ${message} !`, {
+      autoClose: 1500,
+    })
   }
-  
+
   // submit handler function
   const onSubmit = (values, actions) => {
-    Array.isArray(registerdUsers) && registerdUsers.length != 0 ? registerdUsers.map( user => {
-        if(user.email == values.email){
-            if(user.password == values.password){
-              dispatch(setCurrentLoginUser(user));
-              SuccessAlert();
-              navigate("/");
-            }else{
-              unAuthorizedAlert("Password");
-            }
-        }else{
-          unAuthorizedAlert("Email");
-        }
-    }) : unAuthorizedAlert("Email");
 
+    let user = "";
+
+    for (let i = 0; i < registerdUsers.length; i++) {
+      if (values.email == registerdUsers.at(i).email) {
+        user = registerdUsers.at(i);
+      }
+    }
+
+    if (user != "") {
+      if (user.password == values.password) {
+        dispatch(setCurrentLoginUser(user));
+        SuccessAlert();
+        navigate("/");
+      } else {
+        unAuthorizedAlert("password");
+      }
+    } else {
+      unAuthorizedAlert("email");
+    }
   }
 
-  const {values, handleChange, errors, handleSubmit} = useFormik({
-    initialValues:{
-       email:"",
-       password:""
+  const { values, handleChange, errors, handleSubmit } = useFormik({
+    initialValues: {
+      email: "",
+      password: ""
     },
-    validationSchema:basicSchema,
+    validationSchema: basicSchema,
     onSubmit,
   })
 
@@ -80,30 +81,30 @@ function LoginPage() {
 
             <form action="" className="flex flex-col p-3 gap-4">
 
-                {/* email field */}
-                <input id="email" value={values.email} onChange={handleChange} className={`p-2 mt-8 rounded-xl ${errors.email ? `focus:border-red-700 focus:ring-red-700`:`focus:border-blue-700 focus:ring-blue-700`}`} type="email" placeholder="Enter Email" />
-                <span className="-mt-3 text-xs text-[red]">{errors.email}</span>
-                
-                {/* password field */}
-                <div className="relative">
-                  <input id="password" value={values.password} onChange={handleChange} className={`p-2 mt-5 rounded-xl w-full ${errors.password ? `focus:border-red-700 focus:ring-red-700`:`focus:border-blue-700 focus:ring-blue-700`}`} type="password" placeholder="Enter Password" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" className="bi bi-eye absolute top-1/2 right-3 translate-y-0.5" viewBox="0 0 16 16">
-                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                  </svg>
-                </div>
-                <span className="-mt-3 text-xs text-[red]">{errors.password}</span>
-                
-                {/* Login Button */}
-                <button className="bg-[#17396d] py-2 rounded-xl text-white hover:scale-105 duration-300 text-center" onClick={handleSubmit} type="submit">Login</button>
+              {/* email field */}
+              <input id="email" value={values.email} onChange={handleChange} className={`p-2 mt-8 rounded-xl ${errors.email ? `focus:border-red-700 focus:ring-red-700` : `focus:border-blue-700 focus:ring-blue-700`}`} type="email" placeholder="Enter Email" />
+              <span className="-mt-3 text-xs text-[red]">{errors.email}</span>
+
+              {/* password field */}
+              <div className="relative">
+                <input id="password" value={values.password} onChange={handleChange} className={`p-2 mt-5 rounded-xl w-full ${errors.password ? `focus:border-red-700 focus:ring-red-700` : `focus:border-blue-700 focus:ring-blue-700`}`} type="password" placeholder="Enter Password" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" className="bi bi-eye absolute top-1/2 right-3 translate-y-0.5" viewBox="0 0 16 16">
+                  <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                </svg>
+              </div>
+              <span className="-mt-3 text-xs text-[red]">{errors.password}</span>
+
+              {/* Login Button */}
+              <button className="bg-[#17396d] py-2 rounded-xl text-white hover:scale-105 duration-300 text-center" onClick={handleSubmit} type="submit">Login</button>
             </form>
 
             <div className="grid grid-cols-3 text-gray-400 mt-8 w-5/6 ml-7">
-                <hr className="border-gray-400 mt-2" />
-                <p className="text-center text-sm">OR</p>
-                <hr className="border-gray-400 mt-2"/>
+              <hr className="border-gray-400 mt-2" />
+              <p className="text-center text-sm">OR</p>
+              <hr className="border-gray-400 mt-2" />
             </div>
-        
+
             {/* google login button */}
             <div className="p-3">
               <button className="mt-3 py-2 bg-black text-white px-10 rounded-xl w-full flex justify-center text-sm items-center hover:scale-105 duration-300">
@@ -121,12 +122,12 @@ function LoginPage() {
 
             {/* navigate to the register form */}
             <div className="flex justify-between text-sm item-center mt-4">
-                <p className="mt-2">Don't have an account?</p>
-                <Link to={"/signup"} className="bg-white px-5 py-2 border rounded-xl mb-3 mr-4 hover:scale-110 duration-300">
-                  Register
-                </Link>
+              <p className="mt-2">Don't have an account?</p>
+              <Link to={"/signup"} className="bg-white px-5 py-2 border rounded-xl mb-3 mr-4 hover:scale-110 duration-300">
+                Register
+              </Link>
             </div>
-            
+
           </div>
         </div>
       </section>
