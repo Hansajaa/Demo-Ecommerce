@@ -1,9 +1,9 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
-import { AllCartItemsTotalPrice } from '../../feature/cart/CartSlice';
+import {selectCurrentLogUser} from '../../feature/users/UserSlice'
 
 const OrderSummeryTable = () => {
-    const totalPrice = useSelector(AllCartItemsTotalPrice);
+    const currentLogUser = useSelector(selectCurrentLogUser);
 
     return (
         <>
@@ -18,7 +18,7 @@ const OrderSummeryTable = () => {
                                 <p className='text-white'>Sub Total</p>
                             </div>
                             <div>
-                                <p className='text-white'>Rs. {totalPrice}</p>
+                                <p className='text-white'>Rs. {currentLogUser.totalPrice ? currentLogUser.totalPrice : 0.0}</p>
                             </div>
                         </div>
                     </div>
@@ -44,17 +44,6 @@ const OrderSummeryTable = () => {
                             </div>
                         </div>
                     </div>
-
-                    {/* <div className='grid-rows-1 mt-3'>
-                        <div className='grid grid-cols-2 gap-x-52'>
-                            <div>
-                                <p className='text-white'>Tax</p>
-                            </div>
-                            <div>
-                                <p className='text-white'>10%</p>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
 
                 <hr className='mt-5' />
@@ -66,7 +55,7 @@ const OrderSummeryTable = () => {
                                 <p className='text-white font-bold'>Total</p>
                             </div>
                             <div>
-                                <p className='text-white font-bold'>Rs. {totalPrice}</p>
+                                <p className='text-white font-bold'>Rs. {currentLogUser.totalPrice ? currentLogUser.totalPrice : 0.0}</p>
                             </div>
                         </div>
                     </div>
