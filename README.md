@@ -28,8 +28,11 @@ The registration page enables new users to sign up by providing essential inform
 
 ## Features
 
+- **User Registration**: Users can Register but only one email can use one time.
+- **User Login**: Users Can Login with their email and password.
+- **Product cart**: Users Can add products into the cart, update quantity and delete from cart.
+- **Product Search**: Users Can search products by name.
 - **Responsive Design**: Ensures the application looks great on all devices.
-- **User Authentication**: Secure login and registration options.
 - **Modern UI**: Utilizes the latest design trends to provide an appealing user experience.
 - **Easy Navigation**: Intuitive navigation to enhance user engagement.
 
@@ -38,6 +41,7 @@ The registration page enables new users to sign up by providing essential inform
 - **React**: For building the user interface.
 - **Tailwind CSS**: For utility-first CSS styling, responsive and mobile-first design.
 - **Axios**: For get data from servers.
+- **Redux**: For complex state management (ex: User Authentication, Cart Functionality).
 
 We hope you enjoy the experience of using our E-Commerce application. If you have any feedback or suggestions, feel free to reach out to me.
 
@@ -53,11 +57,11 @@ Ensure you have the following installed:
 1. **Clone the repository:**
    ```bash
    
-   git clone https://github.com/Hansajaa/E-Commerce-Front-End.git
+   git clone https://github.com/Hansajaa/Irusri-Frontend-Task.git
 
 2. **Navigate to the project directory:**
     ```bash
-    cd e-commerce-frontend
+    cd Irusri-Frontend-Task
     
 3. **Install dependencies:**
     ```bash
