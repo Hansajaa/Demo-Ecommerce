@@ -12,15 +12,19 @@ import shippingImg from '../assets/home_page_asserts/shipping.png'
 import CardCarousel from '../organisms/CardCarousel';
 import Footer from '../common/FooterSection';
 import { useState, useRef, useEffect } from 'react';
+import {initializeMenProducts} from '../feature/products/ProductsSlice'
 
 // sample product list import
 import { menPorductArray } from '../Data/MenProducts';
 import ItemsNotFoundAnimation from '../atoms/animations/ItemsNotFoundAnimation';
 import ShopAllButton from '../atoms/buttons/ShopAllButton';
+import { useDispatch } from 'react-redux';
 
 function HomePage() {
 
+    const dispatch = useDispatch();
     const [dropdownState, setDropdownState] = useState(false);
+
 
     const handleClick = () => {
         setDropdownState(!dropdownState);
@@ -33,6 +37,10 @@ function HomePage() {
             inputRef.current.focus();
         }
     }
+
+    useEffect(()=>{
+        dispatch(initializeMenProducts({mensItems:menPorductArray}));
+    },[])
 
     return (
         <div>
@@ -119,7 +127,7 @@ function HomePage() {
                     <div>
                         <ShopAllButton shopAllPage={'/homeShopAll'}/>
                         <CardCarousel products={menPorductArray}></CardCarousel>
-                    </div> :  <ItemsNotFoundAnimation />
+                    </div> :  <ItemsNotFoundAnimation/>
 
                 }
 
