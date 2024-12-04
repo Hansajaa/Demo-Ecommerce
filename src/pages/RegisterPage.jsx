@@ -1,20 +1,34 @@
 import registerImage from "../assets/login_page_asserts/login_page_side_image.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-
+import { allRegisteredUsers } from "../feature/users/UserSlice";
 import {basicSchema} from '../schemas/register/RegisterSchemas'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerNewUser } from "../feature/users/UserSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 
 function RegisterPage(props) {
 
+    const [isEmailExists, setEmailExists] = useState();
+
     const dispatch = useDispatch();
+    const registeredUser = useSelector(allRegisteredUsers);
 
     let navigate = useNavigate();
 
+    //check email is exists
+    const handleKeyUp = ()=>{
+        setEmailExists(false);
+        for (let i = 0; i < registeredUser.length; i++) {
+            if(registeredUser.at(i).email == values.email){
+                setEmailExists(true);
+                return;
+            }
+        }
+    }
     
 
     const notifySuccess = (name) => {
@@ -22,13 +36,15 @@ function RegisterPage(props) {
             autoClose:3000
         });
 
-        // navigate("/login");
+        navigate("/login");
     }
     
     const onSubmit = (values, actions) => {
-        dispatch(registerNewUser(values));
-        actions.resetForm();
-        notifySuccess(values.name);
+        if(!isEmailExists){
+            dispatch(registerNewUser(values));
+            actions.resetForm();
+            notifySuccess(values.name);
+        }
     }
 
     const {values, handleChange, errors, handleSubmit} = useFormik({
@@ -40,34 +56,6 @@ function RegisterPage(props) {
         validationSchema: basicSchema,
         onSubmit
     })
-
-    
-
-    //-----------------------------------------------------------------------------
-
-    // function saveUser(user){
-    //     axios.post('http://localhost:8080/api/v1/user/add', user)
-    //     .then(function (response){
-    //         if(response !== null){
-    //             reset();
-    //             successAlert(response.data);
-    //         }
-    //     })
-    //     .catch(function(error){
-    //         console.log(error);
-    //     })
-    // }
-
-    // function successAlert(username){
-    //     Swal.fire({
-    //         position: "top-end",
-    //         icon: "success",
-    //         title: `You're Successfully Registered ${username}`,
-    //         showConfirmButton: false,
-    //         timer: 1500
-    //     });
-    //     navigate("/login");
-    // }
 
     return (
         <div>
@@ -89,8 +77,9 @@ function RegisterPage(props) {
                             {errors.name && <span className="-mt-3 text-[red] text-xs">{errors.name}</span>}
                             
                             {/* email field */}
-                            <input id="email" value={values.email} onChange={handleChange} className={`p-2 rounded-xl ${errors.email ? `focus:border-red-700 focus:ring-red-700`:`focus:border-blue-700 focus:ring-blue-700`}`} type="email" placeholder="Enter E-mail" />
+                            <input onKeyUp={handleKeyUp} id="email" value={values.email} onChange={handleChange} className={`p-2 rounded-xl ${errors.email ? `focus:border-red-700 focus:ring-red-700`:`focus:border-blue-700 focus:ring-blue-700`}`} type="email" placeholder="Enter E-mail" />
                             {errors.email && <span className="-mt-3 text-xs text-[red]">{errors.email}</span>}
+                            {isEmailExists && <span className="-mt-3 text-xs text-[red]">Email Already Exists</span>}
                             
                             {/* password field */}
                             <div className="relative">
